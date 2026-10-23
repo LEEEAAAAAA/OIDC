@@ -1,12 +1,4 @@
-Prerequisites:
-    - JDK 17+ with JAVA_HOME configured
-    - mvn 3.9.16
-    - A working container
-    - Optional : Quarkus CLI
-    - Optional : Mandrel or GralVM
-    - ./jq
-
-    Following: https://quarkus.io/guides/security-oidc-bearer-token-authentication-tutorial/
+Following: https://quarkus.io/guides/security-oidc-bearer-token-authentication-tutorial/
 
     Note: We have 2 Endpoints, admin and user.
             - We only have a user obj bc we return user info (the name), at the admin endpoint you only return a str
