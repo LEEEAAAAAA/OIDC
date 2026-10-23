@@ -1,0 +1,31 @@
+Prerequisites:
+    - JDK 17+ with JAVA_HOME configured
+    - mvn 3.9.16
+    - A working container
+    - Optional : Quarkus CLI
+    - Optional : Mandrel or GralVM
+    - ./jq
+
+    Following: https://quarkus.io/guides/security-oidc-bearer-token-authentication-tutorial/
+
+    Note: We have 2 Endpoints, admin and user.
+            - We only have a user obj bc we return user info (the name), at the admin endpoint you only return a str
+
+
+run the container ( with the realm file from resources):docker run --name keycloak -e KC_BOOTSTRAP_ADMIN_USERNAME=admin -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin -p 8180:8080 quay.io/keycloak/keycloak:26.7.4 start-dev
+or docker start keycloak
+
+ java -jar target/quarkus-app/quarkus-run.jar
+
+test:
+Get tokens as alice
+export access_token=$(curl -s -X POST \
+  http://localhost:8180/realms/quarkus/protocol/openid-connect/token \
+  --user backend-service:secret \
+  -d 'username=alice&password=alice&grant_type=password' | jq -r .access_token)
+
+  try and login:
+  curl -i http://localhost:8080/api/users/me -H "Authorization: Bearer $access_token"
+
+  or get username:
+  curl -i http://localhost:8080/api/users/me -H "Authorization: Bearer $access_token"
