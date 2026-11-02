@@ -1,8 +1,22 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideKeycloak, withAutoRefreshToken, AutoRefreshTokenService, UserActivityService } from 'keycloak-angular';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+  provideKeycloak,
+  withAutoRefreshToken,
+  AutoRefreshTokenService,
+  UserActivityService,
+  includeBearerTokenInterceptor,
+  INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
+  createInterceptorCondition,
+  IncludeBearerTokenCondition
+} from 'keycloak-angular';
 
 import { routes } from './app.routes';
+
+const backendCondition = createInterceptorCondition<IncludeBearerTokenCondition>({
+  urlPattern: /^(http:\/\/localhost:8080)(\/.*)?$/i
+});
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -24,6 +38,11 @@ export const appConfig: ApplicationConfig = {
       ],
       providers: [AutoRefreshTokenService, UserActivityService]
     }),
+    {
+      provide: INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
+      useValue: [backendCondition]
+    },
+    provideHttpClient(withInterceptors([includeBearerTokenInterceptor])),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes)
   ]
