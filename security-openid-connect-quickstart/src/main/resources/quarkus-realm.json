@@ -467,6 +467,14 @@
       ]
     },
     {
+      "clientId": "frontend",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "redirectUris": ["http://localhost:4200/*"],
+      "webOrigins": ["http://localhost:4200"],
+      "attributes": { "pkce.code.challenge.method": "S256" }
+    },
+    {
       "id": "dd29e998-54e9-4067-884e-4f986e990c1d",
       "clientId": "realm-management",
       "name": "${client_realm-management}",
